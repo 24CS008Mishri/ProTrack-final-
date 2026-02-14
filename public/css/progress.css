@@ -1,0 +1,140 @@
+/* Container Layout */
+#progress-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Individual Progress Card */
+.progress-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(107, 70, 193, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: transform 0.3s ease;
+}
+
+.progress-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Header: Student ID and Percentage */
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.student-id {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #2d3748;
+}
+
+.percent-label {
+    background: #6b46c1;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* The Progress Bar */
+.progress-bar-container {
+    background: #edf2f7;
+    height: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dynamic Colors */
+.progress-normal { background: linear-gradient(90deg, #6b46c1, #9f7aea); }
+.progress-warning { background: linear-gradient(90deg, #f6ad55, #ed8936); } /* Orange */
+.progress-critical { background: linear-gradient(90deg, #fc8181, #e53e3e); } /* Red */
+
+/* Footer Tally Icons */
+.progress-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tally {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.tally span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Insight Box for Student */
+.contribution-box {
+    background: linear-gradient(135deg, #6b46c1 0%, #4a148c 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(74, 20, 140, 0.2);
+}
+
+/* Container for Pie Chart and Health Stats */
+.analytics-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Allows stacking on small screens */
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Individual Analytics Cards */
+.chart-container, .health-card {
+    flex: 1; /* Both take equal width */
+    min-width: 320px; /* Prevents them from getting too squished */
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Chart Canvas Sizing */
+#taskPieChart {
+    max-width: 100% !important;
+    max-height: 280px !important;
+}
+
+/* Health Status Text */
+#healthStatus {
+    margin-top: 15px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    width: 100%;
+}
+
+.health-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 5px;
+}
+

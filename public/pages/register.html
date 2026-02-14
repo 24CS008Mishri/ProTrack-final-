@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../css-2/style.css">
+    <title>Register - ProTrack</title>
+</head>
+<body>
+    <div class="auth-container">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="text" id="userId" placeholder="Unique ID (Student/Mentor ID)" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <select id="role" required>
+                <option value="" disabled selected>Select Role</option>
+                <option value="student">Student</option>
+                <option value="mentor">Mentor</option>
+            </select>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
+            Already have an account? <a href="login.html" style="color: var(--accent-orange);">Login</a>
+        </p>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Note: You would add a registerUser function to auth.js similar to loginUser
+        document.getElementById('registerForm').addEventListener('submit', registerUser);
+    </script>
+</body>
+</html>

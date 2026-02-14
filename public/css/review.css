@@ -1,0 +1,100 @@
+/* Container for the whole log */
+#review-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+    padding-bottom: 30px;
+}
+
+/* Base Card Styling */
+.review-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Color Coding for "Accepted" (Completed) */
+.review-card.completed {
+    border-left: 6px solid #28a745; /* Bold Green */
+    background-color: #f0fff4;    /* Very Light Green tint */
+}
+
+/* Color Coding for "Changes Required" */
+.review-card.changes-required {
+    border-left: 6px solid #dc3545; /* Bold Red */
+    background-color: #fff5f5;    /* Very Light Red tint */
+}
+
+/* Header Area */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.review-header h4 {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin: 0;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Match the classes in your JS status-finished / status-rejected */
+.status-finished {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Mentor Feedback Box */
+.mentor-comment {
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+.mentor-comment strong {
+    display: block;
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 4px;
+}
+
+.mentor-comment p {
+    margin: 0;
+    line-height: 1.5;
+    color: #1a202c;
+    font-style: italic;
+}
+
+/* Footer info (Student Name) */
+.review-footer {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #a0aec0;
+}

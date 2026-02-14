@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <title>Add Project - ProTrack</title>
+</head>
+<body>
+    <nav class="sidebar">...</nav>
+
+    <div class="main-area">
+        <div class="top-bar">
+            <h1>Future Projects</h1>
+            <button id="showAddForm" style="font-size: 2rem; background: none; color: var(--primary-purple); border: none; cursor: pointer;">+</button>
+        </div>
+
+        <div id="projectFormContainer" style="display: none; background: #111; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <input type="text" id="projName" placeholder="Project Name">
+            <textarea id="projDesc" placeholder="Description"></textarea>
+            <input type="text" id="projDomain" placeholder="Domain">
+            <input type="number" id="projReq" placeholder="Required Students Count">
+            <input type="text" id="projStudents" placeholder="Add Student IDs (comma separated or leave empty)">
+            <button onclick="saveProject()" style="background: var(--primary-purple); color: white; border: none; padding: 10px; width: 100%;">Create Project</button>
+        </div>
+
+        <div id="futureProjectsList" class="project-grid">
+            </div>
+    </div>
+
+    <script>
+    // Toggle form visibility
+    document.getElementById('showAddForm').onclick = () => {
+        const form = document.getElementById('projectFormContainer');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    };
+
+    // NEW: Fetch future projects on page load
+    // Inside the <script> of add-project.html
+document.addEventListener('DOMContentLoaded', async () => {
+    const list = document.getElementById('futureProjectsList');
+    try {
+        const res = await fetch('/api/projects/mentor/future');
+        const projects = await res.json();
+
+        if (projects.length === 0) {
+            list.innerHTML = `<p style="color: #bbb;">No future projects available.</p>`;
+            return;
+        }
+
+        list.innerHTML = projects.map(p => `
+            <div class="project-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>${p.projectName}</h3>
+                    <button onclick="openAddStudentModal('${p._id}')" 
+                            style="background: var(--primary-purple); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">
+                        +
+                    </button>
+                </div>
+                <p class="domain-tag" style="color: var(--primary-purple); margin: 5px 0;">${p.domain}</p>
+                <p style="font-size: 0.9rem; color: #aaa;">Required: ${p.requiredStudents} students</p>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error("Failed to load future projects:", err);
+    }
+});
+
+    async function saveProject() {
+        const studentInput = document.getElementById('projStudents').value;
+        const studentArray = studentInput ? studentInput.split(',').map(id => id.trim()) : [];
+
+        const projectData = {
+            projectName: document.getElementById('projName').value,
+            description: document.getElementById('projDesc').value,
+            domain: document.getElementById('projDomain').value,
+            requiredStudents: document.getElementById('projReq').value,
+            students: studentArray // Sends as array to match Schema
+        };
+
+        const res = await fetch('/api/projects/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(projectData)
+        });
+
+        if (res.ok) {
+            alert("Project Saved!");
+            location.reload(); 
+        }
+    }
+
+    // Add this function inside the <script> of add-project.html
+async function openAddStudentModal(projectId) {
+    const studentId = prompt("Enter the Student Roll Number to assign:");
+    
+    if (!studentId) return;
+
+    try {
+        const response = await fetch('/api/projects/add-student', {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ projectId, studentId })
+        });
+
+        if (response.ok) {
+            alert("Student assigned! Moving project to Active Dashboard.");
+            location.reload(); // Refreshing will remove it from "Future" and move it to "Active"
+        } else {
+            const data = await response.json();
+            alert(data.error || "Failed to add student");
+        }
+    } catch (err) {
+        console.error("Error updating project:", err);
+    }
+}
+</script>
+</body>
+</html>

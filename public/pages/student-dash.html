@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../css-2/dashboard.css">
+    <title>Student Dashboard</title>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">PROTRACK</div>
+        <div class="nav-links">
+            <a href="#" class="nav-item active">Dashboard</a>
+            <a href="#" class="nav-item">Schedule</a>
+            <a href="#" class="nav-item">Courses</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item">Settings</a>
+            <a href="/" class="nav-item">Logout</a>
+        </div>
+    </nav>
+
+    <div class="main-area">
+        <div class="top-bar">
+            <h1>My Projects</h1>
+            <div class="profile-circle" title="Edit Profile">S</div>
+        </div>
+        
+        <div id="projectInfoModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3 id="infoProjectName">Project Description</h3>
+        <hr>
+        <p id="infoProjectDescription" style="padding: 15px 0; line-height: 1.6;"></p>
+        <div class="modal-actions">
+            <button onclick="closeInfoModal()" class="cancel-btn">Close</button>
+        </div>
+    </div>
+</div>
+
+        <div class="project-grid" id="studentProjects">
+            <div class="project-card">
+                <h3>Portfolio Website</h3>
+                <p>Status: In Progress</p>
+            </div>
+        </div>
+    </div>
+    <script src="../js/studentDash.js"></script>
+</body>
+</html>

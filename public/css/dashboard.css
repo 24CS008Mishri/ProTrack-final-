@@ -1,0 +1,205 @@
+:root {
+    --bg-black: #050505;
+    --sidebar-black: #000000;
+    --primary-purple: #6a0dad;
+    --hover-purple: #8b2ec9;
+    --text-white: #ffffff;
+    --card-bg: #111111;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    display: flex;
+}
+
+/* Vertical Navigation Bar */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-black);
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #1a1a1a;
+}
+
+.sidebar-header {
+    padding: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-purple);
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    padding: 15px 30px;
+    color: #bbb;
+    text-decoration: none;
+    transition: 0.3s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: var(--primary-purple);
+    color: white;
+}
+
+.sidebar-footer {
+    padding-bottom: 20px;
+    border-top: 1px solid #1a1a1a;
+}
+
+/* Main Content Area */
+.main-area {
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+/* Profile Circle */
+.profile-circle {
+    width: 45px;
+    height: 45px;
+    background: var(--primary-purple);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.profile-circle:hover {
+    box-shadow: 0 0 15px var(--primary-purple);
+}
+
+.project-card {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    
+    padding-top: 20px;
+    overflow: hidden;
+}
+
+/* Purple Pop/Transition on Hover */
+.project-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-purple);
+    box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+}
+
+.project-card h3 {
+    margin: 0;
+    color: var(--text-white);
+    transition: color 0.3s;
+}
+
+.project-card:hover h3 {
+    color: var(--primary-purple);
+}
+
+.domain-tag {
+    font-size: 0.8rem;
+    color: var(--primary-purple);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+
+/* Centering the Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Dims the background */
+    display: none; /* Controlled by JS flex/none */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+#infoProjectDescription {
+    color: #4a5568 !important; /* Medium-dark gray for the body text */
+    background-color: transparent !important; /* Ensure no white-on-white highlights */
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Ensure the heading is visible */
+#infoProjectName {
+    color: #1a202c !important; /* Almost black */
+    margin-bottom: 10px;
+}
+/* Container to keep buttons side-by-side on the right */
+.button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the two buttons */
+    flex-shrink: 0;
+}
+
+/* Base styles for both circles */
+.add-btn, .info-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s;
+    border: none;
+}
+
+/* Add Button (+) styling */
+.add-btn {
+    background: #6b46c1; /* Your primary purple */
+    color: white;
+}
+
+/* Info Icon (ℹ️) styling */
+.info-icon {
+    background: #f0f0f0;
+    color: #6b46c1;
+    border: 1px solid #ddd;
+}
+
+.add-btn:hover, .info-icon:hover {
+    transform: scale(1.1);
+}
