@@ -1,0 +1,169 @@
+/* --- review.css --- */
+
+:root {
+    --bg-teal: #eef5f5;
+    --sidebar-teal: #4a7c7c;
+    --accent-peach: #fcece5;
+    --accent-orange: #ff9a76;
+    --glass-white: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --text-dark: #2d4a4a;
+    --text-muted: #6b8e8e;
+    --shadow-soft: 0 8px 32px rgba(74, 124, 124, 0.1);
+    /* Theme Gradient for active elements */
+    --theme-gradient: linear-gradient(135deg, #70a1a1 0%, #f5d1c3 100%);
+}
+
+#review-title {
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* Mentor View: Submission Items */
+/* --- review.css Refinement --- */
+/* --- Submission Card Layout --- */
+.submission-item {
+    background: var(--glass-white);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Container for textarea + buttons */
+/* Container for the feedback area and action buttons */
+.feedback-group {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end; /* Keeps buttons level with the bottom of the text area */
+    margin-top: 15px;
+    width: 100%;
+}
+
+.feedback-group textarea {
+    flex: 1; /* Textarea fills the remaining space */
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Button Styling */
+.sub-actions {
+    display: flex;
+    gap: 10px;
+}
+.action-btn {
+    flex: 1;
+    border-radius: 12px; /* Consistent Rounded Rectangle Shape */
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, background 0.2s;
+}
+
+/* Approve: Using the theme's muted teal */
+.action-btn.comp {
+    background: #5f8d8d; 
+    color: white;
+}
+
+/* Reject: Using a clean, soft border look */
+.action-btn.reject {
+    background: white;
+    color: #2d4a4a;
+    border: 1px solid #2d4a4a;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.sub-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.15rem;
+    color: var(--text-dark);
+}
+
+.sub-info p {
+    margin: 2px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Action Container for Textarea and Buttons */
+.sub-actions-container {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end; /* Keeps buttons aligned with bottom of textarea */
+}
+
+.feedback-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 60px;
+    color: var(--text-dark);
+}
+
+
+/* Updated Button Styles */
+
+
+
+
+
+.review-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+/* Student View: Feedback Cards */
+#review-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.review-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+    border-left: 6px solid var(--accent-orange);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    background: var(--glass-white);
+    border-radius: 24px;
+    color: var(--text-muted);
+}
+.empty-state i {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}

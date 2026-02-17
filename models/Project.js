@@ -9,7 +9,8 @@ const ProjectSchema = new mongoose.Schema({
     requiredStudents: { type: Number },
     students: { type: [String], default: [] },
     status: { type: String, default: 'Proposed' },
-    tasks: [taskSchema] // Embedding the task list directly
-});
+    tasks: [taskSchema] ,// Embedding the task list directly
+    repoLink: { type: String, default: "" }
+} ,{ timestamps: true });
 
 module.exports = mongoose.model('Project', ProjectSchema);

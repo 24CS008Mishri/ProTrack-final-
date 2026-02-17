@@ -1,68 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css-2/dashboard.css">
+    <link rel="stylesheet" href="../css-2/add-project.css">
     <title>Add Project - ProTrack</title>
 </head>
 <body>
-    <nav class="sidebar">...</nav>
-
+    <nav class="sidebar">
+        <div class="sidebar-header">PROTRACK</div>
+        <div class="nav-links">
+            <a href="mentor-dash.html" class="nav-item ">Project Dashboard</a>
+            <a href="add-project.html" class="nav-item active">Add Project</a>
+            <a href="#" class="nav-item">Schedule</a>
+            <a href="#" class="nav-item">Course Recommendations</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item">Settings</a>
+            <a href="login.html" class="nav-item">Logout</a>
+        </div>
+    </nav>
+<main class="main-content">
     <div class="main-area">
+        <a href="mentor-dash.html" class="back-link">← Back to Dashboard</a>
+        
         <div class="top-bar">
             <h1>Future Projects</h1>
-            <button id="showAddForm" style="font-size: 2rem; background: none; color: var(--primary-purple); border: none; cursor: pointer;">+</button>
+            <button id="showAddForm" class="btn-new-project">
+                <span>+</span> New Project
+            </button>
         </div>
 
-        <div id="projectFormContainer" style="display: none; background: #111; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
-            <input type="text" id="projName" placeholder="Project Name">
-            <textarea id="projDesc" placeholder="Description"></textarea>
-            <input type="text" id="projDomain" placeholder="Domain">
-            <input type="number" id="projReq" placeholder="Required Students Count">
-            <input type="text" id="projStudents" placeholder="Add Student IDs (comma separated or leave empty)">
-            <button onclick="saveProject()" style="background: var(--primary-purple); color: white; border: none; padding: 10px; width: 100%;">Create Project</button>
+        <div id="projectFormContainer">
+            <h1>Create New Project</h1>
+            <p class="subtitle">Design a new project for your students.</p>
+            
+            <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" id="projName" placeholder="E.g., AI-Powered Study Assistant">
+            </div>
+
+            <div class="form-group">
+                <label>Project Description</label>
+                <textarea id="projDesc" placeholder="Describe the project objectives..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Domain</label>
+                <input type="text" id="projDomain" placeholder="E.g., Web Development">
+            </div>
+
+            <div class="form-group">
+                <label>Number of Students Required</label>
+                <input type="number" id="projReq" value="1">
+            </div>
+
+            <div class="form-group">
+                <label>Add Student IDs (Optional)</label>
+                <input type="text" id="projStudents" placeholder="Enter comma separated IDs">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="location.href='mentor-dash.html'">Cancel</button>
+                <button class="btn-create" onclick="saveProject()">
+                    <span>💾</span> Create Project
+                </button>
+            </div>
         </div>
 
-        <div id="futureProjectsList" class="project-grid">
+        <div id="futureProjectsList" class="project-grid" style="margin-top: 30px;">
             </div>
     </div>
-
+</main>
     <script>
-    // Toggle form visibility
-    document.getElementById('showAddForm').onclick = () => {
+    // Merged Initialization Logic
+    document.addEventListener('DOMContentLoaded', async () => {
         const form = document.getElementById('projectFormContainer');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    };
+        const toggleBtn = document.getElementById('showAddForm');
+        const list = document.getElementById('futureProjectsList');
 
-    // NEW: Fetch future projects on page load
-    // Inside the <script> of add-project.html
-document.addEventListener('DOMContentLoaded', async () => {
-    const list = document.getElementById('futureProjectsList');
-    try {
-        const res = await fetch('/api/projects/mentor/future');
-        const projects = await res.json();
+        // 1. Setup Toggle Form
+        form.style.display = 'none';
+        toggleBtn.onclick = () => {
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                form.style.display = 'none';
+            }
+        };
 
-        if (projects.length === 0) {
-            list.innerHTML = `<p style="color: #bbb;">No future projects available.</p>`;
-            return;
-        }
+        // 2. Load Future Projects
+        try {
+            const res = await fetch('/api/projects/mentor/future');
+            const projects = await res.json();
 
-        list.innerHTML = projects.map(p => `
-            <div class="project-card">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <h3>${p.projectName}</h3>
-                    <button onclick="openAddStudentModal('${p._id}')" 
-                            style="background: var(--primary-purple); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">
-                        +
-                    </button>
+            if (projects.length === 0) {
+                list.innerHTML = `<p style="color: #bbb; text-align: center; grid-column: 1/-1;">No future projects available.</p>`;
+                return;
+            }
+
+            list.innerHTML = projects.map(p => `
+                <div class="project-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <h3>${p.projectName}</h3>
+                        <div class="button-group">
+                            
+                
+                                <button class="add-btn" 
+                                onclick="openAddStudentModal('${p._id}')" 
+                                title="Assign Student">+</button>
+                                <span class="info-icon" 
+                            onclick="openProjectInfo('${p._id}')" 
+                            title="View Details">ℹ️</span>
+                        </div>                        
+                    </div>
+                    <p><strong>Domain:</strong> ${p.domain}</p>
+                    <p style="font-size: 0.9rem; color: #5a7a7a;">Required: ${p.requiredStudents} students</p>
                 </div>
-                <p class="domain-tag" style="color: var(--primary-purple); margin: 5px 0;">${p.domain}</p>
-                <p style="font-size: 0.9rem; color: #aaa;">Required: ${p.requiredStudents} students</p>
-            </div>
-        `).join('');
-    } catch (err) {
-        console.error("Failed to load future projects:", err);
-    }
-});
+            `).join('');
+        } catch (err) {
+            console.error("Failed to load future projects:", err);
+        }
+    });
 
     async function saveProject() {
         const studentInput = document.getElementById('projStudents').value;
@@ -73,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             description: document.getElementById('projDesc').value,
             domain: document.getElementById('projDomain').value,
             requiredStudents: document.getElementById('projReq').value,
-            students: studentArray // Sends as array to match Schema
+            students: studentArray
         };
 
         const res = await fetch('/api/projects/add', {
@@ -88,32 +147,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Add this function inside the <script> of add-project.html
-async function openAddStudentModal(projectId) {
-    const studentId = prompt("Enter the Student Roll Number to assign:");
-    
-    if (!studentId) return;
+    async function openAddStudentModal(projectId) {
+        const studentId = prompt("Enter the Student Roll Number to assign:");
+        if (!studentId) return;
 
-    try {
-        const response = await fetch('/api/projects/add-student', {
-            method: 'PATCH',
-            headers: { 
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ projectId, studentId })
-        });
+        try {
+            const response = await fetch('/api/projects/add-student', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ projectId, studentId })
+            });
 
-        if (response.ok) {
-            alert("Student assigned! Moving project to Active Dashboard.");
-            location.reload(); // Refreshing will remove it from "Future" and move it to "Active"
-        } else {
-            const data = await response.json();
-            alert(data.error || "Failed to add student");
+            if (response.ok) {
+                alert("Student assigned! Moving project to Active Dashboard.");
+                location.reload();
+            } else {
+                const data = await response.json();
+                alert(data.error || "Failed to add student");
+            }
+        } catch (err) {
+            console.error("Error updating project:", err);
         }
-    } catch (err) {
-        console.error("Error updating project:", err);
     }
-}
-</script>
+    </script>
 </body>
 </html>

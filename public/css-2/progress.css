@@ -1,0 +1,172 @@
+:root {
+    --bg-teal: #eef5f5;
+    --sidebar-teal: #4a7c7c;
+    --accent-peach: #fcece5;
+    --accent-orange: #ff9a76;
+    --accent-lavender: #dcd6f7;
+    --glass-white: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --text-dark: #2d4a4a;
+    --text-muted: #718096;
+    --shadow-soft: 0 12px 40px rgba(74, 124, 124, 0.08);
+}
+
+/* Fix the overlapping/squashed analytics row */
+.analytics-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+    align-items: stretch;
+}
+
+.analytics-card {
+    flex: 1;
+    min-height: 300px; /* Gives the Chart space */
+    background: var(--glass-white);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.analytics-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(74, 124, 124, 0.12);
+}
+
+/* Ensure the chart canvas fills its container */
+#taskPieChart {
+    max-height: 200px !important; 
+    margin: auto;
+}
+
+/* Progress Stats Grid */
+#progressStats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* Glassmorphism for Student Cards */
+.progress-card {
+    background: var(--glass-white);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated Progress Fill */
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--sidebar-teal), #70a1a1);
+    box-shadow: 0 0 15px rgba(112, 161, 161, 0.3);
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.progress-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(74, 124, 124, 0.15);
+    background: rgba(255, 255, 255, 0.85);
+}
+
+/* Specific styling for the Backlog/General Pool card */
+.progress-card.backlog {
+    border-left: 6px solid var(--accent-lavender);
+}
+
+/* Card Header Layout */
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.student-id {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+
+
+/* Modern Progress Bar */
+.progress-bar-container {
+    background: rgba(0, 0, 0, 0.04) !important;
+    height: 12px !important;
+    border-radius: 20px !important;
+    margin: 20px 0 !important;
+    position: relative;
+}
+
+/* Fix for the Health Display overlapping in screenshot */
+.health-card {
+    background: linear-gradient(135deg, var(--glass-white), var(--accent-peach));
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+#healthStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Stats Tally Styling */
+.tally span {
+    background: white;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+/* Your Impact Box */
+.contribution-box {
+    grid-column: 1 / -1; /* Makes it full width */
+    animation: fadeInSlide 0.6s ease-out;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    #progressStats {
+        grid-template-columns: 1fr;
+    }
+}
+.chart-wrapper {
+    position: relative;
+    height: 220px; /* Force a height */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+#taskPieChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ensure the title doesn't squash the chart */
+.analytics-card .card-title {
+    margin-bottom: 10px;
+    font-weight: 700;
+}

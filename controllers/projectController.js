@@ -81,3 +81,30 @@ exports.getProjectById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Backend Route (e.g., projectRoutes.js)
+exports.updateProjectRepo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { repoLink } = req.body;
+
+        // Find project by ID and update the repoLink field
+        const updatedProject = await Project.findByIdAndUpdate(
+            id,
+            { repoLink: repoLink },
+            { new: true, runValidators: true } // Returns the updated document
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        res.status(200).json({
+            message: "GitHub repository linked successfully",
+            project: updatedProject
+        });
+    } catch (error) {
+        console.error("Error updating repo link:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

@@ -12,6 +12,13 @@ router.get('/mentor/future', projectController.getFutureProjects);
 router.get('/mentor/active', projectController.getActiveProjects);
 router.patch('/add-student', projectController.addStudentToProject);
 router.get('/:id', projectController.getProjectById);
+// Existing route
+router.patch('/add-student', projectController.addStudentToProject);
+
+// NEW: Route for GitHub Link
+// This matches: PATCH /api/projects/697ed350...
+router.patch('/:id', projectController.updateProjectRepo);
+
 
 // --- Task Lifecycle Routes ---
 router.post('/add-task', taskController.addTask);
@@ -125,4 +132,5 @@ router.put('/update-task', async (req, res) => {
         res.status(500).json({ message: "Server error during update" });
     }
 });
+
 module.exports = router;
