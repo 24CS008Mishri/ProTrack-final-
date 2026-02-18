@@ -63,14 +63,17 @@
             container.innerHTML = projects.map(p => {
                 const needsMoreStudents = p.students.length < p.requiredStudents;
                 const slotsLeft = p.requiredStudents - p.students.length;
+                const isCompleted = p.status === 'Completed';
 
                 return `
-    <div class="project-card" 
+        <div class="project-card ${isCompleted ? 'card-completed' : ''}"
          onclick="if(!event.target.closest('.add-btn') && !event.target.closest('.info-icon')) location.href='project-view.html?id=${p._id}'" 
          style="cursor: pointer; position: relative;">
         
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <h3 style="margin: 0; flex: 1; padding-right: 10px;">${p.projectName}</h3>
+            <h3 style="margin: 0; flex: 1; padding-right: 10px;">${p.projectName}
+                ${isCompleted ? '<span class="complete-checkmark" title="Project Verified">✅</span>' : ''}
+                </h3>
             
             <div class="button-group">
                 ${needsMoreStudents ? 
@@ -94,12 +97,16 @@
                 : `<span style="color: #4caf50;">Project Full</span>`}
         </div>
         <div style="margin-top: 5px; font-size: 0.8rem; color: #aaa;">Status: ${p.status}</div>
-    </div>
-`;
+            </div>
+        `;
             }).join('');
         } catch (err) {
             console.error("Error loading active projects:", err);
             container.innerHTML = `<p style="color: red;">Error loading projects.</p>`;
+        }
+
+        if (projectData.status === 'Completed') {
+        updateUItoCompleted(projectData.rating);
         }
     });
 

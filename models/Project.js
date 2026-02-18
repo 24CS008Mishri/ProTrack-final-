@@ -8,8 +8,25 @@ const ProjectSchema = new mongoose.Schema({
     domain: { type: String },
     requiredStudents: { type: Number },
     students: { type: [String], default: [] },
+    // ADDED: Reference to the User model (the mentor)
+    mentor: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        required: true 
+    },
     status: { type: String, default: 'Proposed' },
+    rating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5
+    },
     tasks: [taskSchema] ,// Embedding the task list directly
+    githubMap: {
+        type: Map,
+        of: String,
+        default: {}
+    },
     repoLink: { type: String, default: "" }
 } ,{ timestamps: true });
 

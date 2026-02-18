@@ -124,29 +124,50 @@
     });
 
     async function saveProject() {
-        const studentInput = document.getElementById('projStudents').value;
-        const studentArray = studentInput ? studentInput.split(',').map(id => id.trim()) : [];
+    // 1. Get the token saved during mentor login
+    const token = localStorage.getItem('authToken'); 
+    
+    if (!token) {
+        alert("Session expired. Please login again.");
+        window.location.href = 'login.html';
+        return;
+    }
 
-        const projectData = {
-            projectName: document.getElementById('projName').value,
-            description: document.getElementById('projDesc').value,
-            domain: document.getElementById('projDomain').value,
-            requiredStudents: document.getElementById('projReq').value,
-            students: studentArray
-        };
+    const studentInput = document.getElementById('projStudents').value;
+    const studentArray = studentInput ? studentInput.split(',').map(id => id.trim()) : [];
 
+    const projectData = {
+        projectName: document.getElementById('projName').value,
+        description: document.getElementById('projDesc').value,
+        domain: document.getElementById('projDomain').value,
+        requiredStudents: document.getElementById('projReq').value,
+        students: studentArray
+    };
+
+    try {
         const res = await fetch('/api/projects/add', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Critical for auto-filling Mentor ID
+            },
             body: JSON.stringify(projectData)
         });
 
-        if (res.ok) {
-            alert("Project Saved!");
-            location.reload(); 
-        }
-    }
+        const data = await res.json();
 
+        if (res.ok) {
+            alert("✅ Project Saved Successfully!");
+            // Instead of reload, redirect to dashboard for better UX
+            window.location.href = 'mentor-dash.html'; 
+        } else {
+            alert("Error: " + (data.message || "Failed to save project"));
+        }
+    } catch (err) {
+        console.error("Fetch Error:", err);
+        alert("Could not connect to server.");
+    }
+}
     async function openAddStudentModal(projectId) {
         const studentId = prompt("Enter the Student Roll Number to assign:");
         if (!studentId) return;

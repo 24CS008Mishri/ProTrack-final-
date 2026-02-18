@@ -1,2 +1,4 @@
 .env
 node_modules/
+fix-admin.js
+seedAdmin.js

@@ -60,3 +60,100 @@ input, select, textarea {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+
+/******************************************************************** 1. Success Glow Header */
+.glass-card.project-complete {
+    border: 1px solid rgba(76, 175, 80, 0.3); /* Soft Emerald border */
+    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.12); /* Calm green glow */
+    transition: all 0.5s ease-in-out;
+}
+
+.status-tag.complete {
+    background: rgba(76, 175, 80, 0.15); /* Soft green background */
+    color: #2e7d32; /* Darker green text */
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+/* Optional: Add a smooth fade-in for the rating section */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* 2. Soft Star Rating System */
+.rating-container {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: #e0e0e0; /* Default muted grey */
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.star.active {
+    color: #ffb74d; /* Soft Peach/Orange accent from your palette */
+    filter: drop-shadow(0 0 5px rgba(255, 183, 77, 0.4));
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+.header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Keeps button and stars aligned to the right */
+    gap: 15px;
+    margin-top: 10px; /* Aligns visually with the title text height */
+}
+
+/* Button Styling */
+.btn-complete {
+    background: #3b5262; /* Using your accent palette */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px lab(92.75% -13.83 -11.18 / 0.2);
+}
+
+.btn-complete:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+/* Rating Styling */
+.rating-wrapper p {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+/* Style for the checkmark emoji */
+.complete-checkmark {
+    font-size: 1.1rem;
+    margin-left: 5px;
+    vertical-align: middle;
+    filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.3));
+}
+/* Hover effect for the checkmark */
+.complete-checkmark:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}

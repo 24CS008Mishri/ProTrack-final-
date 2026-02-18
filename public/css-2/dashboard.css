@@ -247,6 +247,7 @@ h2 {
     line-height: 1.4;
 }
 
+
 /* --- BUTTONS & ICONS --- */
 .button-group {
     display: flex;
@@ -310,4 +311,22 @@ h2 {
     cursor: pointer;
     font-weight: 600;
     margin-top: 1rem;
+}
+
+/* Custom Scrollbar for Chrome/Safari/Edge */
+.main-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: rgba(112, 161, 161, 0.3); /* Muted Teal with transparency */
+    border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: var(--sidebar-teal);
 }

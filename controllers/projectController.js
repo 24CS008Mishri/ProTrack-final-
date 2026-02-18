@@ -9,6 +9,8 @@ exports.addProject = async (req, res) => {
             description,
             domain,
             requiredStudents,
+            // Automatically filled from the mentor's authenticated session
+            mentor: req.user._id,
             students // Array of student IDs
         });
         await newProject.save();

@@ -84,14 +84,30 @@ async function loadProjectData() {
     try {
         const response = await fetch(`/api/projects/${projectId}`);
         const project = await response.json();
-
+        if (project.githubMap) {
+    userMap = project.githubMap; // This fills the inputs when the page opens
+}
         if (response.ok) {
+
+    // 1. SET GLOBAL DATA FIRST (The Foundation)
+            window.userMap = project.githubMap || {}; 
+            const projectStudents = project.students || [];
+
+            // 2. Clear previous inputs before rendering new ones
+    const container = document.getElementById('github-mapping-container');
+    if (container) container.innerHTML = ''; 
+
+    // 3. Render the UI
+    if (typeof renderMappingInputs === 'function') {
+        renderMappingInputs(project.students || []); 
+    }
+           
             // NEW: Inject data into your Glassmorphism Header Card
             const nameEl = document.getElementById('displayProjectName');
             const descEl = document.getElementById('displayProjectDesc');
             const studentCountEl = document.getElementById('studentCount');
             const dateEl = document.getElementById('createdDate');
-
+            
             if (nameEl) nameEl.innerText = project.projectName || "Untitled Project";
             if (descEl) descEl.innerText = project.description || "No description provided.";
             
@@ -104,13 +120,7 @@ async function loadProjectData() {
     const dateSource = project.createdAt || project.updatedAt;
     dateEl.innerText = dateSource ? new Date(dateSource).toLocaleDateString('en-GB') : "--/--/--";
 }           
-            const projectStudents = project.students || [];
-
-// 2. Pass the CORRECT variable to renderMappingInputs
-if (typeof renderMappingInputs === 'function') {
-    renderMappingInputs(projectStudents); // Changed from studentList to projectStudents
-}
-
+            
             if (project.repoLink) {
                 // 1. Update local cache
                 localStorage.setItem(`repoLink_${projectId}`, project.repoLink);
@@ -156,6 +166,12 @@ if (typeof renderMappingInputs === 'function') {
                 loadReviewHistory(project.tasks);
             }
         }
+
+        // --- ADD THIS LOGIC HERE ---
+            if (project.status === 'Completed') {
+    // Pass the saved rating from the database so stars light up
+             updateUItoCompleted(project.rating || 0);
+        } 
     } catch (err) {
         console.error("Error fetching project data:", err);
     }

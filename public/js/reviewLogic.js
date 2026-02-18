@@ -46,3 +46,100 @@ function loadReviewHistory(tasks) {
         container.appendChild(card);
     });
 }
+
+async function handleProjectCompletion() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('id');
+    const token = localStorage.getItem('token');
+
+    try {
+        // 1. Tell the Database the project is done
+        const res = await fetch(`/api/projects/${projectId}/complete`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status: 'Completed' })
+        });
+
+        if (!res.ok) throw new Error("Failed to update database");
+
+        // 2. ONLY IF DATABASE SUCCESS: Show Celebration & UI changes
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
+
+        updateUItoCompleted(); // Helper function to change colors/icons
+        
+    } catch (err) {
+        console.error("Error completing project:", err);
+        alert("Could not save project status. Please try again.");
+    }
+}
+function updateUItoCompleted(savedRating = 0) {
+    document.querySelector('.project-header-card').classList.add('project-complete');
+    document.getElementById('statusTag').innerText = "Completed";
+    document.getElementById('statusTag').className = "status-tag complete";
+    document.getElementById('completeBtn').style.display = 'none';
+    document.getElementById('ratingSection').style.display = 'block';
+    
+    if (savedRating > 0) {
+        setRating(savedRating); // Highlight stars if they were already saved
+    }
+}
+/*
+async function handleProjectCompletion() {
+    // Add this inside your handleProjectCompletion function
+document.querySelector('.project-header-card').style.boxShadow = "2px 8px 32px rgba(113, 205, 116, 0.98)";
+    // 1. Celebration
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+    // 2. Card Transition
+    const card = document.querySelector('.project-header-card');
+    if (card) card.classList.add('project-complete');
+
+    // 3. Status Tag Update (The part that was crashing)
+    const statusTag = document.getElementById('statusTag');
+    if (statusTag) {
+        statusTag.innerText = "Completed";
+        statusTag.className = "status-tag complete";
+    }
+
+    // 4. Toggle Buttons
+    const completeBtn = document.getElementById('completeBtn');
+    const ratingSection = document.getElementById('ratingSection');
+    
+    if (completeBtn) completeBtn.style.display = 'none';
+    if (ratingSection) {
+        ratingSection.style.display = 'block';
+        ratingSection.classList.add('fade-in');
+    }
+}*/
+
+// Add this to reviewLogic.js
+let currentRating = 0;
+
+function setRating(n) {
+    currentRating = n;
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        star.classList.toggle('active', index < n);
+    });
+
+    // Send to backend
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('id');
+
+    fetch(`/api/projects/${projectId}/complete`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ rating: currentRating })
+    })
+    .then(res => res.json())
+    .then(data => console.log("Success:", data))
+    .catch(err => console.error("Error:", err));
+}

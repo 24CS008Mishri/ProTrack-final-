@@ -241,6 +241,48 @@
 .github-username-input {
     padding: 8px;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(45, 150, 150, 0.2);
     background: rgba(255, 255, 255, 0.5);
+}
+
+#final-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #ccc;
+}
+
+#final-save-btn {
+    transition: all 0.3s ease;
+}
+
+.github-profile-link {
+    color: #2d9696;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    background: rgba(45, 150, 150, 0.1);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.github-profile-link:hover {
+    background: rgba(45, 150, 150, 0.2);
+    transform: translateY(-1px);
+}
+
+.you-badge {
+    font-size: 0.7rem;
+    background: #e0f2f2;
+    color: #2d9696;
+    padding: 1px 5px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
+.verification-status-container {
+    min-height: 20px;
+    margin-top: -10px;
+    margin-bottom: 10px;
 }

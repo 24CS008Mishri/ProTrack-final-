@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         projectGrid.innerHTML = projects.map(p => {
             const needsMoreStudents = p.students.length < p.requiredStudents;
             const slotsLeft = p.requiredStudents - p.students.length;
+            const isCompleted = p.status === 'Completed';
 
             return `
             <div class="project-card" 
@@ -38,7 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <h3 style="margin: 0; flex: 1; padding-right: 10px;">${p.projectName}</h3>
-                    
+                     ${isCompleted ? '<span class="complete-checkmark" title="Project Verified">✅</span>' : ''}
+
                     <div class="button-group">
                         <span class="info-icon" 
                               onclick="event.stopPropagation(); openProjectInfo('${p._id}')" 
@@ -59,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }).join('');
 
+       
     } catch (err) {
         console.error("Error loading projects:", err);
         projectGrid.innerHTML = `<p style="color: red;">Error loading dashboard. Please try again.</p>`;

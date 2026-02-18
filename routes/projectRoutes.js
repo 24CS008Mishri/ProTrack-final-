@@ -11,6 +11,34 @@ router.get('/student/:userId', projectController.getStudentProjects);
 router.get('/mentor/future', projectController.getFutureProjects);
 router.get('/mentor/active', projectController.getActiveProjects);
 router.patch('/add-student', projectController.addStudentToProject);
+
+// 1. PLACE SPECIFIC SUB-ROUTES FIRST (Before generic /:id)
+
+// Add this to your project routes file
+router.patch('/:id/github-map-simple', async (req, res) => {
+    try {
+        const { userId, handle } = req.body;
+        const project = await Project.findById(req.params.id);
+
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        // Check if this student is actually part of this project
+        if (!project.students.includes(userId)) {
+            return res.status(403).json({ message: "You are not a member of this project." });
+        }
+
+        // Save the mapping
+        if (!project.githubMap) project.githubMap = new Map();
+        project.githubMap.set(userId, handle.toLowerCase());
+        
+        project.markModified('githubMap');
+        await project.save();
+
+        res.json({ success: true, githubMap: project.githubMap });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 router.get('/:id', projectController.getProjectById);
 // Existing route
 router.patch('/add-student', projectController.addStudentToProject);
@@ -133,4 +161,26 @@ router.put('/update-task', async (req, res) => {
     }
 });
 
+router.patch('/:id/complete',async (req, res) => {
+    try {
+        const { rating } = req.body;
+        
+        const updatedProject = await Project.findByIdAndUpdate(
+            req.params.id,
+            { 
+                status: 'Completed',
+                rating: rating 
+            },
+            { new: true }
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        res.json({ message: "Project archived successfully", project: updatedProject });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 module.exports = router;

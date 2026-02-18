@@ -57,16 +57,23 @@ async function loginUser(event) {
         localStorage.setItem('authToken', data.token);
         
         alert("Welcome, " + data.name);
-        
-        if (data.role === 'student') {
+        if (data.role === 'admin') {
+        window.location.href = '/pages/admin-dash.html';
+    }
+        else if (data.role === 'student') {
             window.location.href = '/pages/student-dash.html';
         } else if (data.role === 'mentor') {
             window.location.href = '/pages/mentor-dash.html';
         }
-    } else {
+       } else {
         // on error
 triggerShake();
         alert(data.message || "Login failed");
     }
 }
 
+function triggerShake() {
+    const container = document.querySelector('.auth-container');
+    container.classList.add('shake');
+    setTimeout(() => container.classList.remove('shake'), 400);
+}

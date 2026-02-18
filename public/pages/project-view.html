@@ -10,7 +10,7 @@
                                 <link rel="stylesheet" href="../css-2/dashboard.css">
     <link rel="stylesheet" href="../css-2/github.css">
 
-
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Project View</title>
@@ -45,9 +45,26 @@
                     <div class="project-meta">
                         <span class="meta-item">👤 <span id="studentCount">0/0</span> Students</span>
                         <span class="meta-item">📅 Created: <span id="createdDate">--/--/--</span></span>
-                        <span class="status-tag active">Active</span>
+                        <span id="statusTag" class="status-tag active">Active</span>
                     </div>
                 </div>
+
+                <div class="header-actions">
+        <button id="completeBtn" class="btn-complete" onclick="handleProjectCompletion()">
+            Mark as Complete
+        </button>
+        
+        <div id="ratingSection" class="rating-wrapper" style="display: none;">
+            <p>Rate Outcome</p>
+            <div class="stars">
+                <span class="star" onclick="setRating(1)">★</span>
+                <span class="star" onclick="setRating(2)">★</span>
+                <span class="star" onclick="setRating(3)">★</span>
+                <span class="star" onclick="setRating(4)">★</span>
+                <span class="star" onclick="setRating(5)">★</span>
+            </div>
+        </div>
+    </div>
             </div>
 
     <div class="main-area">
