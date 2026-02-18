@@ -3,20 +3,46 @@
 <head>
     <link rel="stylesheet" href="../css-2/dashboard.css">
         <link rel="stylesheet" href="../css-2/modals.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <title>Student Dashboard</title>
+    <style>
+        .nav-item i {
+            margin-right: 12px; /* Space between icon and text */
+            width: 20px;        /* Keeps text aligned even if icons are different sizes */
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <nav class="sidebar">
+        <nav class="sidebar">
         <div class="sidebar-header">PROTRACK</div>
         <div class="nav-links">
-            <a href="#" class="nav-item active">Dashboard</a>
-            <a href="#" class="nav-item">Schedule</a>
-            <a href="#" class="nav-item">Courses</a>
+            <a href="#" class="nav-item active">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fas fa-plus-circle"></i> Add Project
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fas fa-calendar-alt"></i> Schedule
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fas fa-book"></i> Courses
+            </a>
         </div>
+
         <div class="sidebar-footer">
-            <a href="#" class="nav-item">Settings</a>
-            <a href="/" class="nav-item">Logout</a>
+           <a href="./settings.html" class="nav-item">
+           <i class="fas fa-cog icon-settings"></i> Settings
+            </a>
+            
+            <a href="/" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
         </div>
     </nav>
 <main class="main-content">
