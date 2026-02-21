@@ -28,6 +28,7 @@ exports.addProject = async (req, res) => {
 exports.getFutureProjects = async (req, res) => {
     try {
         const projects = await Project.find({
+            mentor: req.user._id, // CRITICAL: Only MY projects
             $or: [
                 { students: { $size: 0 } },
                 { students: { $exists: false } },
@@ -43,7 +44,10 @@ exports.getFutureProjects = async (req, res) => {
 exports.getActiveProjects = async (req, res) => {
     try {
         // Finds projects where the students array is NOT empty
-        const projects = await Project.find({ "students.0": { $exists: true } });
+        const projects = await Project.find({ 
+            mentor: req.user._id,
+            "students.0": { $exists: true } 
+        });
         res.status(200).json(projects);
     } catch (err) {
         res.status(500).json({ error: err.message });
