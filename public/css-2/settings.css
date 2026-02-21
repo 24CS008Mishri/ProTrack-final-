@@ -1,0 +1,158 @@
+/* Import font to match style.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-card: rgba(245, 240, 235, 0.9); /* Glassy version of your #f5f0eb */
+  --text-primary: #1e2d3d;
+  --text-secondary: #7a8a96;
+  --accent-teal: #4a7c8a;
+  --accent-orange: #d4875e;
+  --input-border: #d0ccc7;
+  --input-bg: #ede8e2;
+  --card-shadow: 0 20px 60px -15px rgba(30, 45, 61, 0.25);
+  --radius: 1.25rem;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #5a9ea8 0%, #6ba8ad 30%, #c9a090 70%, #d4a998 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.settings-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-teal);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.back-link:hover {
+  transform: translateX(-4px);
+}
+
+.settings-card h2 {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--input-border);
+  opacity: 0.5;
+  margin: 1.5rem 0;
+}
+
+/* Settings Menu Items */
+#settingsMenu button {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+#settingsMenu button:hover {
+  border-color: var(--accent-teal);
+  background: #fff;
+  transform: scale(1.02);
+}
+
+/* Form Styles to match loginForm */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.75rem;
+  background: var(--input-bg);
+  font-family: inherit;
+  color: var(--text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: var(--accent-teal);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(74, 124, 138, 0.15);
+}
+
+.save-btn {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: var(--accent-orange);
+  color: #fff;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 1rem;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+}
+
+.error-msg {
+  color: #d4875e;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 500;
+}

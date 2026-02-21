@@ -25,7 +25,7 @@
         const repoUrl = document.getElementById('repo-url-input').value.trim();
 
         if (!repoUrl.includes("github.com/")) {
-            alert("Please enter a valid GitHub URL");
+            showAlert("Please enter a valid GitHub URL", "error", false);
             return;
         }
 
@@ -128,7 +128,7 @@ function renderMappingInputs(studentList) {
     const myId = localStorage.getItem('userId'); // Get your Roll No (e.g., 24cs002)
     const githubHandle = document.getElementById(`input-${myId}`).value.trim();
 
-    if (!githubHandle) return alert("Please enter a username first.");
+    if (!githubHandle) return showAlert("Please enter a username first.", "error", false);
 
     try {
         const response = await fetch(`/api/projects/${gitProjId}/github-map-simple`, {
@@ -142,10 +142,10 @@ function renderMappingInputs(studentList) {
         });
 
         if (response.ok) {
-            alert("Saved!");
+            showAlert("Saved!", "success", false);
             location.reload(); // Refresh to show the new data
         } else {
-            alert("Save failed. Check console.");
+            showAlert("Save failed. Check console.", "error", false);
         }
     } catch (err) {
         console.error(err);

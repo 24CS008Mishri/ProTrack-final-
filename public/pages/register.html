@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="../css-2/style.css">
+    <link rel="stylesheet" href="../css-2/dashboard.css">
+    <script src="../js/utils.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Register - ProTrack</title>
 </head>
 <body>
+   
     <div class="auth-container">
         <h2>Create Account</h2>
         <form id="registerForm">
@@ -23,6 +27,21 @@
         <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
             Already have an account? <a href="login.html" style="color: var(--accent-orange);">Login</a>
         </p>
+    </div>
+    <div id="common-alert" class="protrack-alert">
+    <i id="alert-icon" class="fas"></i>
+    <span id="alert-text"></span>
+    </div>
+    <div id="custom-prompt" class="modal-overlay" style="display: none;">
+        <div class="modal-content protrack-glass">
+            <h3 id="prompt-title">Input Required</h3>
+            <p id="prompt-message"></p>
+            <input type="text" id="prompt-input" class="protrack-input" autocomplete="off">
+            <div class="modal-actions">
+                <button id="prompt-confirm" class="confirm-btn">Confirm</button>
+                <button id="prompt-cancel" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
     </div>
     <script src="../js/auth.js"></script>
     <script>

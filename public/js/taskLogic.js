@@ -303,33 +303,33 @@ function renderSubmissions(tasks) {
     }).join('');
 }
 // 5. NOTIFICATION LOGIC (Top-Right)
-async function checkNotifications() {
-    if (!userRollNo || userRole !== 'student') return;
-    try {
-        const res = await fetch(`/api/projects/my-notifications/${userRollNo}`);
-        const notifications = await res.json();
+// async function checkNotifications() {
+//     if (!userRollNo || userRole !== 'student') return;
+//     try {
+//         const res = await fetch(`/api/projects/my-notifications/${userRollNo}`);
+//         const notifications = await res.json();
         
-        const badge = document.getElementById('notif-count');
-        const list = document.getElementById('notif-items');
+//         const badge = document.getElementById('notif-count');
+//         const list = document.getElementById('notif-items');
 
-        if (notifications.length > 0) {
-            badge.innerText = notifications.length;
-            badge.style.display = 'block';
-            list.innerHTML = notifications.map(n => `
-                <div class="notif-item" style="padding:10px; border-bottom:1px solid #ddd; color: #333;">
-                    <strong>${n.status}</strong>: ${n.taskName}
-                </div>
-            `).join('');
-        }
-    } catch (err) { console.error("Notification check failed", err); }
-}
+//         if (notifications.length > 0) {
+//             badge.innerText = notifications.length;
+//             badge.style.display = 'block';
+//             list.innerHTML = notifications.map(n => `
+//                 <div class="notif-item" style="padding:10px; border-bottom:1px solid #ddd; color: #333;">
+//                     <strong>${n.status}</strong>: ${n.taskName}
+//                 </div>
+//             `).join('');
+//         }
+//     } catch (err) { console.error("Notification check failed", err); }
+// }
 
-function toggleNotificationDropdown() {
-    const dropdown = document.getElementById('notif-dropdown');
-    if (dropdown) {
-        dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
-    }
-}
+// function toggleNotificationDropdown() {
+//     const dropdown = document.getElementById('notif-dropdown');
+//     if (dropdown) {
+//         dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+//     }
+// }
 // 6. MODAL & SUBMISSION ACTIONS
 // A single, smart function to handle both New and Edit states
 function openSubmissionModal(taskId, existingLink = "") {
@@ -380,7 +380,7 @@ function previewLink() {
             link = existingLinkEl.getAttribute('href');
         }
     }
-    if (!link) return alert("Please paste a link first!");
+    if (!link) return showAlert("Please paste a link first!", "error", false);
 
     // Apply the protocol fix for the preview as well
     if (!/^https?:\/\//i.test(link)) {
@@ -393,7 +393,7 @@ async function submitTaskProof() {
     const linkInput = document.getElementById('submissionLink');
     let linkValue = linkInput.value.trim();
 
-    if (!linkValue) return alert("Please paste a link!");
+    if (!linkValue) return showAlert("Please paste a link!", "error", false);
 
     // Add https if missing to prevent the "same page reload" issue
     if (!/^https?:\/\//i.test(linkValue)) {
@@ -416,7 +416,7 @@ async function submitTaskProof() {
     });
 
     if (res.ok) {
-        alert("Submitted!");
+        showAlert("Submitted!", "success", false);
         closeSubmissionModal();
         loadProjectData(); // Refresh to see the change
     }
@@ -479,12 +479,25 @@ async function updateStatus(taskId, newStatus) {
 
 async function reviewTask(taskId, newStatus) {
     const feedback = document.getElementById(`feedback-${taskId}`).value;
-    await fetch('/api/projects/review-task', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId, taskId, status: newStatus, feedback })
-    });
-    loadProjectData();
+    const token = localStorage.getItem('authToken'); // Get token
+
+    try {
+        const response = await fetch('/api/projects/review-task', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // ADD THIS
+            },
+            body: JSON.stringify({ projectId, taskId, status: newStatus, feedback })
+        });
+
+        if (response.ok) {
+            showAlert(`Task ${newStatus === 'Completed' ? 'Approved' : 'Changes Requested'}`, "success", false);
+            loadProjectData();
+        }
+    } catch (err) {
+        console.error("Review failed:", err);
+    }
 }
 // Helper function to handle claiming a task (missing in previous code)
 // taskLogic.js
@@ -503,7 +516,7 @@ async function claimTask(taskId) {
         });
 
         if (res.ok) {
-            alert("Task claimed successfully!");
+            showAlert("Task claimed successfully!", "success", false);
             await loadProjectData(); 
         } else {
             console.error("Server responded with error:", res.status);
@@ -545,16 +558,20 @@ async function saveNewTask() {
         // otherwise, it is 'Unassigned'
         status: assigned ? "In Progress" : "Unassigned"
     };
-
+    // 2. Get the token we saved during login
+    const token = localStorage.getItem('authToken');
     try {
         const res = await fetch('/api/projects/add-task', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // This is what the 'protect' middleware looks for
+            },
             body: JSON.stringify(taskData)
         });
 
         if (res.ok) {
-            alert("Task created successfully!");
+            showAlert("Task created successfully!", "success", false);
             closeAddTaskModal();
             loadProjectData(); // Refresh the table
         }
@@ -579,15 +596,15 @@ async function deleteTask(taskId) {
         });
 
         if (res.ok) {
-            alert("Task deleted successfully.");
+            showAlert("Task deleted successfully.", "success", false);
             await loadProjectData(); // Refresh the table
         } else {
             const err = await res.json();
-            alert("Error: " + err.message);
+            showAlert("Error: " + err.message, "error", false);
         }
     } catch (err) {
         console.error("Delete failed:", err);
-        alert("Failed to connect to the server.");
+        showAlert("Failed to connect to the server.", "error", false);
     }
 }
 
@@ -646,12 +663,12 @@ async function updateTaskData() {
     });
 
     if (res.ok) {
-        alert("Changes saved!");
+        showAlert("Changes saved!", "success", false);
         closeTaskDetailsModal();
         loadProjectData(); // Refresh the table to show new info
     } else {
         const errorData = await res.json();
-        alert("Failed to save: " + errorData.message);
+        showAlert("Failed to save: " + errorData.message, "error", false);
     }
 }
 

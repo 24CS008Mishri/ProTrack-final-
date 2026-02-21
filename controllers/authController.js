@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
 // Inside your login function in controllers/authController.js
 exports.login = async (req, res) => {
 
-    console.log("Login Request Received:", req.body);
+    //console.log("Login Request Received:", req.body);
     
     const { userId, password } = req.body;
     try {
@@ -63,26 +63,84 @@ exports.login = async (req, res) => {
     }
 };
 // 3. MIDDLEWARE: PROTECT
+// Updated protect middleware
 exports.protect = async (req, res, next) => {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = decoded;
+
+            // Fetch the user from DB to get the userId (Roll Number)
+            const user = await User.findById(decoded.id).select('-password');
+            
+            if (!user) {
+                return res.status(401).json({ message: 'User no longer exists' });
+            }
+
+            req.user = user; // Now req.user.userId (e.g., 23cs101) exists!
             next();
         } catch (error) {
-            res.status(401).json({ message: 'Not authorized' });
+            return res.status(401).json({ message: 'Not authorized' });
         }
     }
-    if (!token) res.status(401).json({ message: 'No token' });
+    if (!token) return res.status(401).json({ message: 'No token' });
 };
-
 // 4. MIDDLEWARE: ADMIN ONLY
 exports.adminOnly = (req, res, next) => {
     if (req.user && req.user.role === 'admin') {
         next();
     } else {
         res.status(403).json({ message: "Access Denied: Admin only" });
+    }
+};
+// ================= PROFILE =================
+
+// GET PROFILE
+exports.getProfile = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) return res.status(401).json({ message: "No token provided" });
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decoded.id).select("-password");
+
+        res.json(user);
+    } catch (err) {
+        console.log("PROFILE ERROR:", err);
+        res.status(401).json({ message: "Invalid token" });
+    }
+};
+
+
+
+// UPDATE PROFILE
+exports.updateProfile = async (req, res) => {
+    try {
+        const authHeader = req.header("Authorization");
+
+        if (!authHeader) {
+            return res.status(401).json({ message: "No token provided" });
+        }
+
+        const token = authHeader.replace("Bearer ", "");
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            decoded.id,
+            {
+                name: req.body.name,
+                email: req.body.email,
+                department: req.body.department
+            },
+            { new: true }
+        ).select("-password");
+
+        res.json(updatedUser);
+
+    } catch (error) {
+        res.status(401).json({ message: "Invalid or expired token" });
     }
 };

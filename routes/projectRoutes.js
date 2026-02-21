@@ -4,9 +4,12 @@ const router = express.Router();
 const Project = require('../models/Project');
 const projectController = require('../controllers/projectController');
 const taskController = require('../controllers/taskController');
+// Add this at the top of routes/projectRoutes.js
+const { protect } = require('../controllers/authController');
+const Notification = require('../models/Notification');
 
 // --- Project Management Routes ---
-router.post('/add', projectController.addProject);
+router.post('/add',protect, projectController.addProject);
 router.get('/student/:userId', projectController.getStudentProjects);
 router.get('/mentor/future', projectController.getFutureProjects);
 router.get('/mentor/active', projectController.getActiveProjects);
@@ -49,7 +52,7 @@ router.patch('/:id', projectController.updateProjectRepo);
 
 
 // --- Task Lifecycle Routes ---
-router.post('/add-task', taskController.addTask);
+router.post('/add-task', protect,taskController.addTask);
 router.patch('/claim-task', taskController.claimTask);
 
 // 1. UPDATE STATUS (e.g., set to 'In Progress')
@@ -69,42 +72,61 @@ router.post('/submit-task', taskController.submitTask);
 // 2. STUDENT SUBMISSION (Link/File)
 
 // 3. MENTOR REVIEW (Approve/Reject)
-router.post('/review-task', async (req, res) => {
+router.post('/review-task', protect, async (req, res) => {
     const { projectId, taskId, status, feedback } = req.body;
     try {
         const project = await Project.findById(projectId);
         const task = project.tasks.id(taskId);
 
-        task.status = status; // 'Completed' (Green) or 'Changes Required' (Red)
+        if (!task) return res.status(404).json({ message: "Task not found" });
+
+        // 1. Update Task Status & Feedback
+        task.status = status; 
         task.mentorFeedback = feedback;
         
+        // 2. TRIGGER NOTIFICATION to the Student
+        // We use 'submittedBy' which we saved as a String (Roll No) during submission
+        const studentRollNo = task.submission.submittedBy; 
+
+        if (studentRollNo) {
+            const notification = new Notification({
+                recipient: studentRollNo, // Matches student's userId string
+                senderName: req.user.name, // Mentor's name from protect middleware
+                type: status === 'Completed' ? 'approval' : 'rejection',
+                projectName: project.projectName,
+                taskTitle: task.taskName,
+                message: status === 'Completed' ? `approved your task and gave feedback: "${feedback} (${project.projectName} - ${task.taskName})"` : `requested changes: "${feedback} (${project.projectName} - ${task.taskName})"`
+            });
+            await notification.save();
+        }
+
         await project.save();
-        res.status(200).json({ message: "Review recorded" });
+        res.status(200).json({ message: "Review recorded and student notified" });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+// // 4. GET NOTIFICATIONS (For Students)
+// router.get('/my-notifications/:rollNo', async (req, res) => {
+//     try {
+//         // Find projects where the student has tasks that were reviewed
+//         const projects = await Project.find({ "tasks.assignedTo": req.params.rollNo });
+//         let notifications = [];
 
-// 4. GET NOTIFICATIONS (For Students)
-router.get('/my-notifications/:rollNo', async (req, res) => {
-    try {
-        // Find projects where the student has tasks that were reviewed
-        const projects = await Project.find({ "tasks.assignedTo": req.params.rollNo });
-        let notifications = [];
+//         projects.forEach(p => {
+//             const myReviewedTasks = p.tasks.filter(t => 
+//                 t.assignedTo === req.params.rollNo && 
+//                 (t.status === 'Changes Required' || t.status === 'Completed')
+//             );
+//             notifications.push(...myReviewedTasks);
+//         });
 
-        projects.forEach(p => {
-            const myReviewedTasks = p.tasks.filter(t => 
-                t.assignedTo === req.params.rollNo && 
-                (t.status === 'Changes Required' || t.status === 'Completed')
-            );
-            notifications.push(...myReviewedTasks);
-        });
-
-        res.status(200).json(notifications);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+//         res.status(200).json(notifications);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// });
 
 // --- Delete Route ---
 router.delete('/delete-task', async (req, res) => {

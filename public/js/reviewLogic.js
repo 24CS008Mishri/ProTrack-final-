@@ -74,7 +74,7 @@ async function handleProjectCompletion() {
         
     } catch (err) {
         console.error("Error completing project:", err);
-        alert("Could not save project status. Please try again.");
+        showAlert("Could not save project status. Please try again.", "error", false);
     }
 }
 function updateUItoCompleted(savedRating = 0) {

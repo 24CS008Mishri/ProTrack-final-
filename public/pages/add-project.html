@@ -4,23 +4,28 @@
     <link rel="stylesheet" href="../css-2/dashboard.css">
     <link rel="stylesheet" href="../css-2/add-project.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../js/utils.js"></script>
     <title>Add Project - ProTrack</title>
 </head>
 <body>
+    <div id="common-alert" class="protrack-alert">
+    <i id="alert-icon" class="fas"></i>
+    <span id="alert-text"></span>
+</div>
     <nav class="sidebar">
         <div class="sidebar-header">PROTRACK</div>
         <div class="nav-links">
             <a href="mentor-dash.html" class="nav-item ">
-                 <i class="fas fa-th-large"></i>Project Dashboard</a>
+                 <i class="fas fa-th-large"></i> Dashboard</a>
             <a href="add-project.html" class="nav-item active">
                  <i class="fas fa-plus-circle"></i>Add Project</a>
             <a href="#" class="nav-item">
                 <i class="fas fa-calendar-alt"></i>Schedule</a>
             <a href="#" class="nav-item">
-                <i class="fas fa-book"></i>Course Recommendations</a>
+                <i class="fas fa-book"></i>Course </a>
         </div>
         <div class="sidebar-footer">
-            <a href="#" class="nav-item">
+            <a href="./settings.html" class="nav-item">
                 <i class="fas fa-cog"></i>Settings</a>
             <a href="login.html" class="nav-item">
                 <i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -135,7 +140,7 @@
     const token = localStorage.getItem('authToken'); 
     
     if (!token) {
-        alert("Session expired. Please login again.");
+        showAlert("Session expired. Please login again.", "error", false);
         window.location.href = 'login.html';
         return;
     }
@@ -164,19 +169,19 @@
         const data = await res.json();
 
         if (res.ok) {
-            alert("✅ Project Saved Successfully!");
+            showAlert("✅ Project Saved Successfully!", "success", false);
             // Instead of reload, redirect to dashboard for better UX
             window.location.href = 'mentor-dash.html'; 
         } else {
-            alert("Error: " + (data.message || "Failed to save project"));
+            showAlert("Error: " + (data.message || "Failed to save project"), "error", false);
         }
     } catch (err) {
         console.error("Fetch Error:", err);
-        alert("Could not connect to server.");
+        showAlert("Could not connect to server.", "error", false);
     }
 }
     async function openAddStudentModal(projectId) {
-        const studentId = prompt("Enter the Student Roll Number to assign:");
+        const studentId = await showPrompt("Enter the Student Roll Number to assign:");
         if (!studentId) return;
 
         try {
@@ -187,16 +192,28 @@
             });
 
             if (response.ok) {
-                alert("Student assigned! Moving project to Active Dashboard.");
+                showAlert("Student assigned! Moving project to Active Dashboard.", "success", false);
                 location.reload();
             } else {
                 const data = await response.json();
-                alert(data.error || "Failed to add student");
+                showAlert(data.error || "Failed to add student", "error", false);
             }
         } catch (err) {
             console.error("Error updating project:", err);
         }
     }
     </script>
+     </div>
+    <div id="custom-prompt" class="modal-overlay" style="display: none;">
+        <div class="modal-content protrack-glass">
+            <h3 id="prompt-title">Input Required</h3>
+            <p id="prompt-message"></p>
+            <input type="text" id="prompt-input" class="protrack-input" autocomplete="off">
+            <div class="modal-actions">
+                <button id="prompt-confirm" class="confirm-btn">Confirm</button>
+                <button id="prompt-cancel" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

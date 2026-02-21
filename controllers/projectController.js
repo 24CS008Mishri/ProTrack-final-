@@ -2,6 +2,9 @@ const Project = require('../models/Project');
 
 // Create a new project
 exports.addProject = async (req, res) => {
+    
+    console.log("User Data:", req.user); // If this is undefined, it's an auth issue
+    
     try {
         const { projectName, description, domain, requiredStudents, students } = req.body;
         const newProject = new Project({

@@ -11,8 +11,10 @@ const taskSchema = new mongoose.Schema({
         enum: ['Unassigned', 'In Progress', 'Pending Review', 'Changes Required', 'Completed'], 
         default: 'Unassigned' 
     },
+    
     submission: {
         link: { type: String, default: "" },
+        submittedBy: { type: String },
         submittedAt: { type: Date }
     },
     mentorFeedback: { type: String, default: "" }// New field

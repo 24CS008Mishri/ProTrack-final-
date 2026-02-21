@@ -4,7 +4,7 @@ const path = require('path'); // Required for handling file paths
 require('dotenv').config();
 
 const app = express();
-
+const userRoutes = require('./routes/userRoutes');
 // 1. Connect Database
 connectDB();
 
@@ -21,6 +21,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', require('./routes/authRoutes'));
 // app.use('/api/projects', require('./routes/projectRoutes')); // Future use
 app.use('/api/projects', require('./routes/projectRoutes'));
+
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+
+app.use('/api/users', userRoutes);
 // 5. DEFAULT ROUTE (Redirect to login)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages', 'login.html'));

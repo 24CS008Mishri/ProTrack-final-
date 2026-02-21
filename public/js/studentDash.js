@@ -66,6 +66,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error loading projects:", err);
         projectGrid.innerHTML = `<p style="color: red;">Error loading dashboard. Please try again.</p>`;
     }
+
+    // Also load the notification count/badge immediately
+    if (typeof fetchNotifications === 'function') {
+        fetchNotifications(); 
+    }
 });
 
 function openProjectInfo(projectId) {

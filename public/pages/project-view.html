@@ -11,29 +11,49 @@
     <link rel="stylesheet" href="../css-2/github.css">
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
+    <script src="../js/utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Project View</title>
 </head>
 <body>
-    
+    <div id="common-alert" class="protrack-alert">
+    <i id="alert-icon" class="fas"></i>
+    <span id="alert-text"></span>
+    </div>
+    <div id="custom-prompt" class="modal-overlay" style="display: none;">
+        <div class="modal-content protrack-glass">
+            <h3 id="prompt-title">Input Required</h3>
+            <p id="prompt-message"></p>
+            <input type="text" id="prompt-input" class="protrack-input" autocomplete="off">
+            <div class="modal-actions">
+                <button id="prompt-confirm" class="confirm-btn">Confirm</button>
+                <button id="prompt-cancel" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
     <nav class="sidebar">
     <div class="sidebar-header" id="sidebarHeader">PROTRACK</div>
 
     <div class="nav-links">
-        <a href="#" class="nav-item active" id="sidebarDashLink">Project Dashboard</a>
+        <a href="#" class="nav-item active" id="sidebarDashLink">
+            <i class="fas fa-th-large"></i> Dashboard</a>
         
-        <a href="add-project.html" class="nav-item" id="mentorOnlyAdd">Add Project</a>
+        <a href="add-project.html" class="nav-item" id="mentorOnlyAdd">
+             <i class="fas fa-plus-circle"></i>Add Project</a>
         
-        <a href="#" class="nav-item">Schedule</a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>Schedule</a>
         
-        <a href="#" class="nav-item">Course Recommendations</a>
+        <a href="#" class="nav-item"> 
+             <i class="fas fa-book"></i>Course </a>
     </div>
 
     <div class="sidebar-footer">
-        <hr class="sidebar-divider"> <a href="#" class="nav-item">Settings</a>
+        <hr class="sidebar-divider"> <a href="./settings.html" class="nav-item">
+            <i class="fas fa-cog icon-settings"></i>Settings</a>
         
-        <a href="/" class="nav-item" onclick="localStorage.clear()">Logout</a>
+        <a href="/" class="nav-item" onclick="localStorage.clear()">
+             <i class="fas fa-sign-out-alt"></i>Logout</a>
     </div>
 </nav>
         <main class="main-content">
@@ -284,6 +304,21 @@
     <p id="viewTaskFeedback" style="margin: 5px 0 0 0; font-style: italic; color: #444;"></p>
 </div>
 </div>
+<div id="common-alert" class="protrack-alert">
+    <i id="alert-icon" class="fas"></i>
+    <span id="alert-text"></span>
+    </div>
+    <div id="custom-prompt" class="modal-overlay" style="display: none;">
+        <div class="modal-content protrack-glass">
+            <h3 id="prompt-title">Input Required</h3>
+            <p id="prompt-message"></p>
+            <input type="text" id="prompt-input" class="protrack-input" autocomplete="off">
+            <div class="modal-actions">
+                <button id="prompt-confirm" class="confirm-btn">Confirm</button>
+                <button id="prompt-cancel" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/taskLogic.js"></script>
     <script src="../js/progressLogic.js"></script> 

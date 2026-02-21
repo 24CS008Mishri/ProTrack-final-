@@ -18,18 +18,18 @@ async function registerUser(event) {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Account created successfully!");
+            showAlert("Account created successfully!", "success", true);
             window.location.href = '/pages/login.html';
         } else {
             // on error
 triggerShake();
-            alert("Registration failed: " + data.error);
+            showAlert("Registration failed: " + data.error, "error", false);
         }
     } catch (err) {
         // on error
 triggerShake();
         console.error("Error:", err);
-        alert("An error occurred during registration.");
+        showAlert("An error occurred during registration.", "error", false);
     }
 }
 // Function for Login
@@ -55,8 +55,8 @@ async function loginUser(event) {
         localStorage.setItem('userName', data.name);
         localStorage.setItem('userRole', data.role); // Ensure your backend sends 'role'
         localStorage.setItem('authToken', data.token);
-        
-        alert("Welcome, " + data.name);
+ 
+        showAlert("Welcome, " + data.name,"success", true);
         if (data.role === 'admin') {
         window.location.href = '/pages/admin-dash.html';
     }
@@ -68,7 +68,7 @@ async function loginUser(event) {
        } else {
         // on error
 triggerShake();
-        alert(data.message || "Login failed");
+        showAlert(data.message || "Login failed", "error", false);
     }
 }
 

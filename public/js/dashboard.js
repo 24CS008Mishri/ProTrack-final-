@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // You can replace this with a Modal/Pop-up
         const newName = prompt("Edit your name:", "User Name");
         if (newName) {
-            alert("Profile Updated Successfully!");
+            showAlert("Profile Updated Successfully!", "success", false);
         }
     });
 });
