@@ -11,9 +11,11 @@ const Notification = require('../models/Notification');
 // --- Project Management Routes ---
 router.post('/add',protect, projectController.addProject);
 router.get('/student/:userId', projectController.getStudentProjects);
+
 router.get('/mentor/future', projectController.getFutureProjects);
 router.get('/mentor/active', projectController.getActiveProjects);
 router.patch('/add-student', projectController.addStudentToProject);
+router.patch('/claim-task', taskController.claimTask);
 
 // 1. PLACE SPECIFIC SUB-ROUTES FIRST (Before generic /:id)
 
@@ -42,7 +44,6 @@ router.patch('/:id/github-map-simple', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-router.patch('/claim-task', taskController.claimTask);
 
 router.get('/:id', projectController.getProjectById);
 // Existing route

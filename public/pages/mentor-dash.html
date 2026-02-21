@@ -97,10 +97,11 @@
             // FIX 2: Assign to the global variable (remove 'const')
             projects = await res.json();
 
-            if (projects.length === 0) {
-                container.innerHTML = `<p style="color: #bbb; text-align: center; grid-column: 1/-1;">No active projects found.</p>`;
-                return;
-            }
+            // Safety check: ensure projects is an array
+        if (!Array.isArray(projects) || projects.length === 0) {
+            container.innerHTML = `<p style="color: #bbb; text-align: center; grid-column: 1/-1;">No active projects found.</p>`;
+            return;
+        }
 
             container.innerHTML = projects.map(p => {
                 const needsMoreStudents = p.students.length < p.requiredStudents;
@@ -147,9 +148,7 @@
             container.innerHTML = `<p style="color: red;">Error loading projects.</p>`;
         }
 
-        if (projectData.status === 'Completed') {
-        updateUItoCompleted(projectData.rating);
-        }
+        
         const name = localStorage.getItem("userName");
         if (name) {
             document.getElementById("profileInitial").innerText =
