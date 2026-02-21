@@ -3,7 +3,7 @@ const Notification = require('../models/Notification');
 
 // Mentor adds a task to the pool
 exports.addTask = async (req, res) => {
-    const { projectId, taskName, description, assignedTo, deadline } = req.body;
+    const { projectId, taskName, description, assignedTo, deadline ,priority} = req.body;
     try {
         const project = await Project.findById(projectId);
         // If assignedTo is empty, it remains "General" for students to select
@@ -16,6 +16,7 @@ exports.addTask = async (req, res) => {
             description, 
             assignedTo: assignedTo || "General", 
             deadline,
+            priority,
             status
         });
         await project.save();

@@ -70,7 +70,7 @@ function setupDynamicNavigation() {
     
     // 4. Update the Header to reflect the specific Role
     if (sidebarHeader) {
-        sidebarHeader.innerText = (userRole === 'mentor') ? 'PROTRACK MENTOR' : 'PROTRACK STUDENT';
+        sidebarHeader.innerText = (userRole === 'mentor') ? 'PROTRACK' : 'PROTRACK';
     }
 
     // 5. Role-based visibility for the "Add Project" link

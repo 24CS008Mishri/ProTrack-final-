@@ -42,6 +42,8 @@ router.patch('/:id/github-map-simple', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+router.patch('/claim-task', taskController.claimTask);
+
 router.get('/:id', projectController.getProjectById);
 // Existing route
 router.patch('/add-student', projectController.addStudentToProject);
@@ -53,7 +55,6 @@ router.patch('/:id', projectController.updateProjectRepo);
 
 // --- Task Lifecycle Routes ---
 router.post('/add-task', protect,taskController.addTask);
-router.patch('/claim-task', taskController.claimTask);
 
 // 1. UPDATE STATUS (e.g., set to 'In Progress')
 router.post('/update-task-status', async (req, res) => {
