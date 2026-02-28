@@ -29,7 +29,7 @@ exports.addTask = async (req, res) => {
                 type: 'new_task',
                 projectName: project.projectName,
                 taskTitle: taskName,
-                message: `assigned you a new task: ${taskName}`
+                message: `assigned you a new task: ${taskName} in ${project.projectName}. Check it out!`
             }).save();
         } else {
             // project.students contains Strings, so this now works perfectly!
@@ -40,7 +40,7 @@ exports.addTask = async (req, res) => {
                     type: 'new_task',
                     projectName: project.projectName,
                     taskTitle: taskName,
-                    message: `added a new task to the pool: ${taskName}`
+                    message: `added a new task to the pool: ${taskName} in ${project.projectName}. Claim it before someone else does!`
                 }).save();
             });
             await Promise.all(promises);
@@ -86,7 +86,7 @@ exports.submitTask = async (req, res) => {
             return res.status(400).json({ message: "Submission link is required" });
         }
 
-        const project = await Project.findById(projectId);
+        const project = await Project.findById(projectId).populate('mentor');
         if (!project) return res.status(404).json({ message: "Project not found" });
 
         const task = project.tasks.id(taskId);
@@ -108,12 +108,12 @@ exports.submitTask = async (req, res) => {
             // Ensure this matches how the Mentor will fetch it
             // If mentors use their 'csm001' ID, use project.mentor.userId
             // For now, using .toString() on the mentor's ObjectID is safest
-            recipient: project.mentor.toString(), 
+            recipient: project.mentor.userId, 
             senderName: req.user.name,
             type: 'submission',
             projectName: project.projectName,
             taskTitle: task.taskName,
-            message: `submitted a task for review:`
+            message: `submitted a task for review in ${project.projectName} - ${task.taskName}.`
         });
         
         await notification.save();

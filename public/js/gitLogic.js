@@ -3,7 +3,7 @@
     const gitProjId = gitParams.get('id');
     let cachedCommits = [];
     // Initialize userMap - will be overwritten by DB data in loadProjectData
-    let userMap = {};
+window.userMap = window.userMap || {};
     const projectId = urlParams.get('id');
     const storageKey = `repoLink_${projectId}`;
 
@@ -47,33 +47,50 @@
             console.error("Sync Error:", err);
         }
     };
-    window.fetchCommits = async function(repoUrl, studentList) {
-        try {
-            const repoPath = repoUrl.replace('https://github.com/', '').split('/');
-            const response = await fetch(`https://api.github.com/repos/${repoPath[0]}/${repoPath[1]}/commits?per_page=100`);
+
+window.fetchCommits = async function(repoUrl, studentList) {
+    try {
+        const repoPath = repoUrl.replace('https://github.com/', '').split('/');
+        const response = await fetch(`https://api.github.com/repos/${repoPath[0]}/${repoPath[1]}/commits?per_page=100`);
+        
+        if (response.ok) {
+            cachedCommits = await response.json();
+            renderGlobalFeed(cachedCommits.slice(0, 8));
+            renderMappingInputs(studentList);
             
-            if (response.ok) {
-                cachedCommits = await response.json();
-                renderGlobalFeed(cachedCommits.slice(0, 8));
+            // CHECK ROLE: Ensure we use the correct logic for Mentor vs Student
+            const isMentor = (localStorage.getItem('userRole') === 'mentor') || (window.userRole === 'mentor');
+
+            if (isMentor) {
+                console.log("Mentor Mode: Initializing Student Selector.");
+                setupMentorControls(studentList);
                 
-                // renderMappingInputs now populates based on the DB studentList
-                renderMappingInputs(studentList);
-                
-                if (window.userRole === 'mentor') {
-                    setupMentorControls(studentList);
-                } else {
-                    // FIX: Get the handle from the userMap using your logged-in ID
-                const myId = localStorage.getItem('userId');
-                const myGithubHandle = window.userMap ? window.userMap[myId] : null;
-                
-                console.log("Found handle in map for heatmap:", myGithubHandle);
-                renderIndividualHeatmap(cachedCommits, myGithubHandle);
+               
+            } else {
+                // STUDENT MODE: Only runs if NOT a mentor
+                const myId = String(localStorage.getItem('userId') || "").trim().toLowerCase();
+                let myGithubHandle = window.userMap ? window.userMap[myId] : null;
+
+                // Debugging logs
+                console.log("Student ID:", myId);
+                console.log("Handle from Map:", myGithubHandle);
+
+                if (!myGithubHandle) {
+                    const myInput = document.getElementById(`input-${myId}`);
+                    if (myInput && myInput.value.trim() !== "") {
+                        myGithubHandle = myInput.value.trim();
+                    }
+                }
+
+                if (myGithubHandle) {
+                    renderIndividualHeatmap(cachedCommits, myGithubHandle);
                 }
             }
-        } catch (err) {
-            console.error("GitHub Sync Error:", err);
         }
-    };
+    } catch (err) {
+        console.error("GitHub Sync Error:", err);
+    }
+};
 
 function renderMappingInputs(studentList) {
     const container = document.getElementById('github-mapping-container');
@@ -196,14 +213,20 @@ function renderMappingInputs(studentList) {
         if (!header) return;
 
         let select = document.getElementById('student-heatmap-selector');
-        if (select) select.remove();
-
+       if (!select) {
         select = document.createElement('select');
         select.id = 'student-heatmap-selector';
-        select.innerHTML = `<option value="">Select Student</option>` + 
-            studentList.map(name => `<option value="${userMap[name] || ''}">${name}</option>`).join('');
-
+        select.className = 'mentor-select'; // Add CSS for your Soft Glassmorphism theme
         header.appendChild(select);
+    }
+
+    // Use studentList (which are your roll numbers) as keys for userMap
+    select.innerHTML = `<option value="">Select a Student</option>` + 
+        studentList.map(rollNo => {
+            const handle = window.userMap ? window.userMap[rollNo.toLowerCase()] : '';
+            return `<option value="${handle}">${rollNo}</option>`;
+        }).join('');
+
         select.onchange = (e) => renderIndividualHeatmap(cachedCommits, e.target.value);
     }
 

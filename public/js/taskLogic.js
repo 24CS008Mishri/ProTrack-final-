@@ -76,7 +76,7 @@ function setupDynamicNavigation() {
     // 5. Role-based visibility for the "Add Project" link
     const mentorOnlyLink = document.getElementById('mentorOnlyAdd');
     if (mentorOnlyLink) {
-        mentorOnlyLink.style.display = (userRole === 'mentor') ? 'block' : 'none';
+        mentorOnlyLink.style.display = (userRole === 'mentor') ? 'flex' : 'none';
     }
 }
 // --- 3. DATA LOADER ---
@@ -411,7 +411,10 @@ async function submitTaskProof() {
 
     const res = await fetch('/api/projects/submit-task', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}` // ADD THIS
+    },
         body: JSON.stringify(payload)
     });
 

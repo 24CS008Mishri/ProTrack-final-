@@ -7,56 +7,15 @@ const taskController = require('../controllers/taskController');
 // Add this at the top of routes/projectRoutes.js
 const { protect } = require('../controllers/authController');
 const Notification = require('../models/Notification');
-
+//main
 // --- Project Management Routes ---
 router.post('/add',protect, projectController.addProject);
-router.get('/student/:userId', projectController.getStudentProjects);
-
-router.get('/mentor/future', projectController.getFutureProjects);
-router.get('/mentor/active', projectController.getActiveProjects);
+router.get('/mentor/future',protect, projectController.getFutureProjects);
+router.get('/mentor/active',protect, projectController.getActiveProjects);
+router.post('/add-task', protect,taskController.addTask);
 router.patch('/add-student', projectController.addStudentToProject);
 router.patch('/claim-task', taskController.claimTask);
-
-// 1. PLACE SPECIFIC SUB-ROUTES FIRST (Before generic /:id)
-
-// Add this to your project routes file
-router.patch('/:id/github-map-simple', async (req, res) => {
-    try {
-        const { userId, handle } = req.body;
-        const project = await Project.findById(req.params.id);
-
-        if (!project) return res.status(404).json({ message: "Project not found" });
-
-        // Check if this student is actually part of this project
-        if (!project.students.includes(userId)) {
-            return res.status(403).json({ message: "You are not a member of this project." });
-        }
-
-        // Save the mapping
-        if (!project.githubMap) project.githubMap = new Map();
-        project.githubMap.set(userId, handle.toLowerCase());
-        
-        project.markModified('githubMap');
-        await project.save();
-
-        res.json({ success: true, githubMap: project.githubMap });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-router.get('/:id', projectController.getProjectById);
-// Existing route
-router.patch('/add-student', projectController.addStudentToProject);
-
-// NEW: Route for GitHub Link
-// This matches: PATCH /api/projects/697ed350...
-router.patch('/:id', projectController.updateProjectRepo);
-
-
-// --- Task Lifecycle Routes ---
-router.post('/add-task', protect,taskController.addTask);
-
+router.post('/submit-task',protect, taskController.submitTask);
 // 1. UPDATE STATUS (e.g., set to 'In Progress')
 router.post('/update-task-status', async (req, res) => {
     const { projectId, taskId, status } = req.body;
@@ -70,8 +29,6 @@ router.post('/update-task-status', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-router.post('/submit-task', taskController.submitTask);
-// 2. STUDENT SUBMISSION (Link/File)
 
 // 3. MENTOR REVIEW (Approve/Reject)
 router.post('/review-task', protect, async (req, res) => {
@@ -109,26 +66,6 @@ router.post('/review-task', protect, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// // 4. GET NOTIFICATIONS (For Students)
-// router.get('/my-notifications/:rollNo', async (req, res) => {
-//     try {
-//         // Find projects where the student has tasks that were reviewed
-//         const projects = await Project.find({ "tasks.assignedTo": req.params.rollNo });
-//         let notifications = [];
-
-//         projects.forEach(p => {
-//             const myReviewedTasks = p.tasks.filter(t => 
-//                 t.assignedTo === req.params.rollNo && 
-//                 (t.status === 'Changes Required' || t.status === 'Completed')
-//             );
-//             notifications.push(...myReviewedTasks);
-//         });
-
-//         res.status(200).json(notifications);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// });
 
 // --- Delete Route ---
 router.delete('/delete-task', async (req, res) => {
@@ -148,19 +85,7 @@ router.delete('/delete-task', async (req, res) => {
         res.status(500).json({ error: err.message }); 
     }
 });
-// In your backend routes file:
-router.get('/task-details/:projectId/:taskId', async (req, res) => {
-    try {
-        const project = await Project.findById(req.params.projectId);
-        const task = project.tasks.id(req.params.taskId);
-        
-        if (!task) return res.status(404).json({ message: "Task not found" });
-        
-        res.json(task); // This returns the JSON your frontend is looking for
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+
 // Add this to your backend routes
 router.put('/update-task', async (req, res) => {
     const { projectId, taskId, taskName, description, deadline } = req.body;
@@ -184,6 +109,59 @@ router.put('/update-task', async (req, res) => {
         res.status(500).json({ message: "Server error during update" });
     }
 });
+
+
+//semi
+// 1. PLACE SPECIFIC SUB-ROUTES FIRST (Before generic /:id)
+router.get('/student/:userId', projectController.getStudentProjects);
+// In your backend routes file:
+router.get('/task-details/:projectId/:taskId', async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.projectId);
+        const task = project.tasks.id(req.params.taskId);
+        
+        if (!task) return res.status(404).json({ message: "Task not found" });
+        
+        res.json(task); // This returns the JSON your frontend is looking for
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+//generic
+// Add this to your project routes file
+router.patch('/:id/github-map-simple', async (req, res) => {
+    try {
+        const { userId, handle } = req.body;
+        const project = await Project.findById(req.params.id);
+
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        // Check if this student is actually part of this project
+        if (!project.students.includes(userId)) {
+            return res.status(403).json({ message: "You are not a member of this project." });
+        }
+
+        // Save the mapping
+        if (!project.githubMap) project.githubMap = new Map();
+        project.githubMap.set(userId, handle.toLowerCase());
+        
+        project.markModified('githubMap');
+        await project.save();
+
+        res.json({ success: true, githubMap: project.githubMap });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/:id', projectController.getProjectById);
+// Existing route
+
+// NEW: Route for GitHub Link
+// This matches: PATCH /api/projects/697ed350...
+router.patch('/:id', projectController.updateProjectRepo);
+
 
 router.patch('/:id/complete',async (req, res) => {
     try {

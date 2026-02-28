@@ -91,9 +91,15 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('activeProjectsList');
-        
+        const token = localStorage.getItem('authToken');
         try {
-            const res = await fetch('/api/projects/mentor/active');
+           const res = await fetch('/api/projects/mentor/active', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
             // FIX 2: Assign to the global variable (remove 'const')
             projects = await res.json();
 
@@ -224,7 +230,7 @@
     </div>
 <script src="../js/notificationHandler.js"></script>
 <script src="../js/profile.js"></script>
-
+<script src="../js/taskLogic.js"></script>
 
 </body>
 </html>
